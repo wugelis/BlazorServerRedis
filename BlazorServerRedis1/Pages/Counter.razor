@@ -1,0 +1,28 @@
+﻿@page "/counter"
+@using BlazorServerRedis1.Models
+@using StackExchange.Redis
+@inject CacheModelContainer container
+@inject CounterModel counter
+
+<h1>Counter</h1>
+
+<p>Current count: @counter.AddCounter</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        counter.AddCounter++;
+        container.SetModelData("_COUNTER_MODEL", counter);
+    }
+
+    protected override void OnInitialized()
+    {
+        counter = container.GetModelData<CounterModel>("_COUNTER_MODEL") ?? new CounterModel();
+
+        base.OnInitialized();
+    }
+}
